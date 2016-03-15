@@ -61,7 +61,7 @@
         transclude: true,
         link: function(scope, element, attrs) {
           var getWeeks, init, selectors, today;
-          selectors = document.querySelector('#dateSelectors');
+          selectors = element[0].querySelector('.date-selectors');
           today = moment();
           if (scope.utcMode) {
             today.utc();
