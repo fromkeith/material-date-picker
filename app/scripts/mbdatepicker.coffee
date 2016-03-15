@@ -41,9 +41,11 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
     customInputClass: '@'
   }
   template: '
-            <div id="dateSelectors" class="date-selectors"  outside-click="hidePicker()">
+            <div class="date-selectors" outside-click="hidePicker()">
+                    <md-input-container class="md-block md-input-has-value">
                     <label ng-bind="label" class="mb-input-label" for="{{inputName}}"></label>
-                    <input name="{{ inputName }}" type="text" ng-disabled="{{ngDisabled}}" ng-class="{disabled: ngDisabled}" class="mb-input-field {{customInputClass}}"  ng-click="showPicker()"  class="form-control" id="{{inputName}}" ng-model="date" placeholder="{{ placeholder }}">
+                    <input name="{{ inputName }}" type="text" ng-disabled="{{ngDisabled}}" ng-class="{disabled: ngDisabled}" class="md-input mb-input-field {{customInputClass}}"  ng-click="showPicker()"  class="form-control" id="{{inputName}}" ng-model="date" placeholder="{{ placeholder }}">
+                    </md-input-container>
                     <div class="mb-datepicker" ng-show="isVisible">
                         <table>
                             <caption>

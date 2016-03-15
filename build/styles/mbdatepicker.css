@@ -19,22 +19,22 @@ mb-datepicker .form-control {
 .mb-datepicker table thead tr td{
   padding-bottom: 10px;
 }
-.header-item {
+.mb-datepicker .header-item {
   padding-left: 20px;
   padding-right: 20px;
 }
-.header-month {
+.mb-datepicker .header-month {
   text-align: center;
   width: 70%;
   display: inline-block;
 }
-.header-right {
+.mb-datepicker .header-right {
   text-align: right;
 }
-caption {
+.mb-datepicker caption {
   padding: 0!important;
 }
-.header-year-wrapper {
+.mb-datepicker .header-year-wrapper {
   padding-top: 10px;
   padding-bottom: 10px;
   color: white;
@@ -42,7 +42,7 @@ caption {
   font-size: 1.2em;
   background-color: #15A5DB;
 }
-.header-nav-wrapper {
+.mb-datepicker .header-nav-wrapper {
   padding-top: 5px;
   padding-bottom: 5px;
   color: #626262;
@@ -50,7 +50,7 @@ caption {
   font-size: 1.2em;
   background-color: #E8E8E8;
 }
-.header-year {
+.mb-datepicker .header-year {
   padding-top: 1px;
   padding-bottom: 0!important;
   text-align: center;
@@ -77,33 +77,33 @@ caption {
   background-color: #f5f5f5;
   color: #626262;
 }
-.today {
+.mb-datepicker .today {
   background: #61C7EC!important;
   color: white!important;
 }
-.other {
+.mb-datepicker .other {
 }
-.weekend {
+.mb-datepicker .weekend {
   color:#a3a3a3!important;
 }
-.day {
+.mb-datepicker .day {
   color:#60C1E6!important
 }
-.disabled {
+.mb-datepicker .disabled {
   background:#ECECEC!important;
   color:#a3a3a3!important;
 }
-.disabled:hover {
+.mb-datepicker .disabled:hover {
   background:#ECECEC!important;
 }
-.noselect {
+.mb-datepicker .noselect {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   user-select: none;
 }
-.mb-input-field {
+.date-selectors .mb-input-field {
   border-radius: 0;
   border-bottom: 1px solid red;
 }
