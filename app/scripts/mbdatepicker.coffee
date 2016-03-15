@@ -85,7 +85,7 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
   link: (scope, element, attrs) ->
 
 # Vars
-    selectors = document.querySelector('#dateSelectors')
+    selectors = element[0].querySelector('.date-selectors');
     today = moment()
     if scope.utcMode then today.utc()
     scope.month = '';
