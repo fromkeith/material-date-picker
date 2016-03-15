@@ -103,7 +103,3 @@ mb-datepicker .form-control {
   -moz-user-select: none;
   user-select: none;
 }
-.date-selectors .mb-input-field {
-  border-radius: 0;
-  border-bottom: 1px solid red;
-}
