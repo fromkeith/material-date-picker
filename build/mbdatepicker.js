@@ -201,7 +201,7 @@
             scope.isVisible = false;
           };
           init = function() {
-            dateChanged(moment());
+            dateChanged(moment(), true);
             scope.innerChange = function() {
               var date;
               date = moment(scope.innerModel, scope.dateFormat || 'YYYY-MM-DD');

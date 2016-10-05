@@ -217,7 +217,7 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
       return
 
     init = ->
-      dateChanged(moment());
+      dateChanged(moment(), true);
       # listen for input change
       scope.innerChange = () ->
         date = moment(scope.innerModel, scope.dateFormat || 'YYYY-MM-DD');
