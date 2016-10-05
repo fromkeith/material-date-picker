@@ -2,6 +2,17 @@
 ![Alt text](http://i.imgur.com/dexQ7sd.png)
 
 
+
+
+### This Fork
+
+* Uses ng-model instead of 'date'
+* Allows the use of ng-change
+* Replaces svg arrows with material-icon
+* Opens the display at the selected date, not the last viewed
+* Not tested with any date format besides 'YYYY-MM-DD'
+
+
 This small component is still in currently in BETA. It's a simple date picker based on the angular-material port of polymer by the people behind ionic.
 
 The master branch will always contain the most recent version of the datepicker, so if you want to be up to date, don't pull from bower of npm. These are the stable versions.
