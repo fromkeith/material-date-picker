@@ -56,7 +56,7 @@
           label: '@',
           customInputClass: '@'
         },
-        template: '<div id="dateSelectors" class="date-selectors"  outside-click="hidePicker()"> <label ng-bind="label" class="mb-input-label" for="{{inputName}}"></label> <input name="{{ inputName }}" type="text" ng-disabled="{{ngDisabled}}" ng-class="{disabled: ngDisabled}" class="mb-input-field {{customInputClass}}"  ng-click="showPicker()"  class="form-control" id="{{inputName}}" placeholder="{{ placeholder }}" ng-model="innerModel" ng-change="innerChange()"> <div class="mb-datepicker" ng-show="isVisible"> <table> <caption> <div class="header-year-wrapper"> <span style="display: inline-block; float: left; padding-left:20px; cursor: pointer" class="noselect" ng-click="previousYear(currentDate)"><i class="material-icons">chevron_left</i></span> <span class="header-year noselect" ng-class="noselect">{{ year }}</span> <span style="display: inline-block; float: right; padding-right:20px; cursor: pointer" class="noselect" ng-click="nextYear(currentDate)"><i class="material-icons">chevron_right</i></span> </div> <div class="header-nav-wrapper"> <span class="header-item noselect" style="float: left; cursor:pointer" ng-click="previousMonth(currentDate)"><i class="material-icons">chevron_left</i></span> <span class="header-month noselect">{{ month }}</span> <span class="header-item header-right noselect" style="float: right; cursor:pointer" ng-click="nextMonth(currentDate)"> <i class="material-icons">chevron_right</i></span> </div> </caption> <tbody> <tr> <td class="day-head">{{ ::calendarHeader.monday }}</td> <td class="day-head">{{ ::calendarHeader.tuesday }}</td> <td class="day-head">{{ ::calendarHeader.wednesday }}</td> <td class="day-head">{{ ::calendarHeader.thursday }}</td> <td class="day-head">{{ ::calendarHeader.friday }}</td> <td class="day-head">{{ ::calendarHeader.saturday }}</td> <td class="day-head">{{ ::calendarHeader.sunday }}</td> </tr> <tr class="days" ng-repeat="week in weeks"> <td ng-click="selectDate(day)" class="noselect day-item" ng-repeat="day in week" ng-class="{selected: selectedDate === day.fmt, weekend: day.isWeekend, today: day.isToday, day: day.isEnabled, disabled: !day.isEnabled}"> <div style="display: block;"> {{ ::day.value }} </div> </td> </tr> </tbody> </table> </div> </div>',
+        template: '<div id="dateSelectors" class="date-selectors"  outside-click="hidePicker()"> <label ng-bind="label" class="mb-input-label" for="{{inputName}}"></label> <input name="{{ inputName }}" type="text" ng-disabled="{{ngDisabled}}" ng-class="{disabled: ngDisabled}" class="mb-input-field {{customInputClass}}"  ng-click="showPicker()"  class="form-control" id="{{inputName}}" placeholder="{{ placeholder }}" ng-model="innerModel" ng-change="innerChange()"> <div class="mb-datepicker" ng-show="isVisible"> <table> <caption> <div class="header-year-wrapper"> <span style="display: inline-block; float: left; padding-left:20px; cursor: pointer" class="noselect" ng-click="previousYear(currentDate)"><i class="material-icons">chevron_left</i></span> <span class="header-year noselect" ng-class="noselect">{{ year }}</span> <span style="display: inline-block; float: right; padding-right:20px; cursor: pointer" class="noselect" ng-click="nextYear(currentDate)"><i class="material-icons">chevron_right</i></span> </div> <div class="header-nav-wrapper"> <span class="header-item noselect" style="float: left; cursor:pointer" ng-click="previousMonth(currentDate)"><i class="material-icons">chevron_left</i></span> <span class="header-month noselect">{{ month }}</span> <span class="header-item header-right noselect" style="float: right; cursor:pointer" ng-click="nextMonth(currentDate)"> <i class="material-icons">chevron_right</i></span> </div> </caption> <tbody> <tr> <td class="day-head">{{ ::calendarHeader.sunday }}</td> <td class="day-head">{{ ::calendarHeader.monday }}</td> <td class="day-head">{{ ::calendarHeader.tuesday }}</td> <td class="day-head">{{ ::calendarHeader.wednesday }}</td> <td class="day-head">{{ ::calendarHeader.thursday }}</td> <td class="day-head">{{ ::calendarHeader.friday }}</td> <td class="day-head">{{ ::calendarHeader.saturday }}</td> </tr> <tr class="days" ng-repeat="week in weeks"> <td ng-click="selectDate(day)" class="noselect day-item" ng-repeat="day in week" ng-class="{selected: selectedDate === day.fmt, weekend: day.isWeekend, today: day.isToday, day: day.isEnabled, disabled: !day.isEnabled}"> <div style="display: block;"> {{ ::day.value }} </div> </td> </tr> </tbody> </table> </div> </div>',
         restrict: 'E',
         transclude: true,
         link: function(scope, element, attrs, ngModel) {
@@ -88,25 +88,13 @@
           }
           if (!scope.calendarHeader) {
             scope.calendarHeader = {
+              sunday: $filter('date')(new Date(moment().isoWeekday(7)), 'EEE'),
               monday: $filter('date')(new Date(moment().isoWeekday(1)), 'EEE'),
               tuesday: $filter('date')(new Date(moment().isoWeekday(2)), 'EEE'),
               wednesday: $filter('date')(new Date(moment().isoWeekday(3)), 'EEE'),
               thursday: $filter('date')(new Date(moment().isoWeekday(4)), 'EEE'),
               friday: $filter('date')(new Date(moment().isoWeekday(5)), 'EEE'),
-              saturday: $filter('date')(new Date(moment().isoWeekday(6)), 'EEE'),
-              sunday: $filter('date')(new Date(moment().isoWeekday(7)), 'EEE')
-            };
-          }
-          if (!scope.arrows) {
-            scope.arrows = {
-              year: {
-                left: 'images/white_arrow_left.svg',
-                right: 'images/white_arrow_right.svg'
-              },
-              month: {
-                left: 'images/grey_arrow_left.svg',
-                right: 'images/grey_arrow_right.svg'
-              }
+              saturday: $filter('date')(new Date(moment().isoWeekday(6)), 'EEE')
             };
           }
           getWeeks = function(monthLength, startDay, month) {
@@ -235,14 +223,14 @@
             scope.isVisible = false;
           };
           init = function() {
-            var days, endDate, firstMonday;
+            var days, endDate, firstSunday;
             if (scope.utcMode) {
-              firstMonday = moment.utc(moment.utc().date(1)).startOf('isoweek');
+              firstSunday = moment.utc(moment.utc().date(1)).startOf('isoweek').add(-1, 'day');
             } else {
-              firstMonday = moment(moment().date(1)).startOf('isoweek');
+              firstSunday = moment(moment().date(1)).startOf('isoweek').add(-1, 'day');
             }
-            if (firstMonday.date() === 1) {
-              firstMonday.subtract(1, 'weeks');
+            if (firstSunday.date() === 1) {
+              firstSunday.subtract(1, 'weeks');
             }
             days = moment(moment().date(today.month())).daysInMonth();
             endDate = moment().add(1, 'months').date(0);
@@ -263,8 +251,8 @@
               scope.selectedDate = moment(ngModel[0].$viewValue).format('YYYY-MM-DD');
               return scope.innerModel = moment(ngModel[0].$viewValue).format(scope.dateFormat || 'YYYY-MM-DD');
             };
-            scope.currentDate = firstMonday;
-            return scope.weeks = getWeeks(endDate.diff(firstMonday, 'days'), firstMonday, today.month());
+            scope.currentDate = firstSunday;
+            return scope.weeks = getWeeks(endDate.diff(firstSunday, 'days'), firstSunday, today.month());
           };
           return init();
         }

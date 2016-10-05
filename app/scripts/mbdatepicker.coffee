@@ -60,13 +60,13 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
                             </caption>
                             <tbody>
                               <tr>
+                                <td class="day-head">{{ ::calendarHeader.sunday }}</td>
                                 <td class="day-head">{{ ::calendarHeader.monday }}</td>
                                 <td class="day-head">{{ ::calendarHeader.tuesday }}</td>
                                 <td class="day-head">{{ ::calendarHeader.wednesday }}</td>
                                 <td class="day-head">{{ ::calendarHeader.thursday }}</td>
                                 <td class="day-head">{{ ::calendarHeader.friday }}</td>
                                 <td class="day-head">{{ ::calendarHeader.saturday }}</td>
-                                <td class="day-head">{{ ::calendarHeader.sunday }}</td>
                               </tr>
                               <tr class="days" ng-repeat="week in weeks">
                                 <td ng-click="selectDate(day)" class="noselect day-item" ng-repeat="day in week" ng-class="{selected: selectedDate === day.fmt, weekend: day.isWeekend, today: day.isToday, day: day.isEnabled, disabled: !day.isEnabled}">
@@ -101,24 +101,13 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
       scope.maxDate = moment(scope.maxDate, scope.dateFormat)
       if scope.utcMode then scope.maxDate.utc()
     if !scope.calendarHeader then scope.calendarHeader = {
+      sunday: $filter('date')(new Date(moment().isoWeekday(7)), 'EEE'),
       monday: $filter('date')(new Date(moment().isoWeekday(1)), 'EEE'),
       tuesday: $filter('date')(new Date(moment().isoWeekday(2)), 'EEE'),
       wednesday: $filter('date')(new Date(moment().isoWeekday(3)), 'EEE'),
       thursday: $filter('date')(new Date(moment().isoWeekday(4)), 'EEE'),
       friday: $filter('date')(new Date(moment().isoWeekday(5)), 'EEE'),
       saturday: $filter('date')(new Date(moment().isoWeekday(6)), 'EEE'),
-      sunday: $filter('date')(new Date(moment().isoWeekday(7)), 'EEE'),
-    }
-
-    if !scope.arrows then scope.arrows = {
-      year: {
-        left: 'images/white_arrow_left.svg',
-        right: 'images/white_arrow_right.svg'
-      },
-      month: {
-        left: 'images/grey_arrow_left.svg',
-        right: 'images/grey_arrow_right.svg'
-      }
     }
 
     # Datepicker logic to get weeks
@@ -257,10 +246,10 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
     init = ->
 # First day of month
       if scope.utcMode
-        firstMonday = moment.utc(moment.utc().date(1)).startOf('isoweek')
+        firstSunday = moment.utc(moment.utc().date(1)).startOf('isoweek').add(-1, 'day')
       else
-        firstMonday = moment(moment().date(1)).startOf('isoweek')
-      if(firstMonday.date() == 1) then firstMonday.subtract(1, 'weeks')
+        firstSunday = moment(moment().date(1)).startOf('isoweek').add(-1, 'day')
+      if(firstSunday.date() == 1) then firstSunday.subtract(1, 'weeks')
 
       # No. of days in month
       days = moment(moment().date(today.month())).daysInMonth()
@@ -282,11 +271,11 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
       ngModel[0].$render = () ->
         scope.selectedDate = moment(ngModel[0].$viewValue).format('YYYY-MM-DD');
         scope.innerModel = moment(ngModel[0].$viewValue).format(scope.dateFormat || 'YYYY-MM-DD');
-      scope.currentDate = firstMonday
+      scope.currentDate = firstSunday
       scope.weeks = getWeeks(
 # No. of days in a month from sunday to sunday
-        endDate.diff(firstMonday, 'days'),
-        firstMonday,
+        endDate.diff(firstSunday, 'days'),
+        firstSunday,
         today.month()
       )
     init()
