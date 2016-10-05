@@ -71,7 +71,6 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
                               <tr class="days" ng-repeat="week in weeks">
                                 <td ng-click="selectDate(day)" class="noselect day-item" ng-repeat="day in week" ng-class="{selected: selectedDate === day.fmt, weekend: day.isWeekend, today: day.isToday, day: day.isEnabled, disabled: !day.isEnabled}">
                                   <div style="display: block;">
-                                    {{day.date === selectedDate}}
                                     {{ ::day.value }}
                                   </div>
                                 </td>
