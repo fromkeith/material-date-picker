@@ -155,81 +155,51 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
       if weeks then return weeks
       else return []
 
-    # Logic to get the following month
-    scope.nextMonth = (date) ->
-      next_month = moment(date).date(0)
-      last_day = moment(next_month).add(4, 'months').date(0)
-      scope.year = last_day.year()
-      if(last_day.day() != 7)
-        last_day = last_day.add(7 - last_day.day(), 'days')
-      first_day = moment(next_month).add(2, 'months').startOf('isoweek').add(-1, 'day')
-      scope.currentDate = first_day
+    changeDisplay = (to) ->
+      scope.year = to.year()
+      last_day = moment(to).add(1, 'month').date(0)
+      if (last_day.day() != 7)
+        last_day = last_day.add(6 - last_day.day(), 'days')
+      first_day = moment(to).date(0).startOf('isoweek').add(-1, 'day')
+      scope.currentDate = to
       scope.weeks = []
       scope.weeks = getWeeks(
         last_day.diff(first_day, 'days'),
         first_day,
-        next_month.add(3, 'months').month()
+        to.month()
       )
-      scope.month = $filter('date')(new Date(next_month), 'MMM')
+      scope.month = $filter('date')(to.toDate(), 'MMM')
+
+    # Logic to get the following month
+    scope.nextMonth = (date) ->
+      changeDisplay(date.date(1).add(1, 'month'));
 
     # Logic to get the previous month
     scope.previousMonth = (date) ->
-      last_month = moment(date).date(0)
-      last_day = moment(last_month).add(2, 'months').date(0)
-      scope.year = last_day.year()
-      if(last_day.day() != 7)
-        last_day = last_day.add(7 - last_day.day(), 'days')
-      first_day = moment(last_month).startOf('isoweek').add(-1, 'day')
-      scope.currentDate = first_day
-      scope.weeks = []
-      scope.weeks = getWeeks(
-        last_day.diff(first_day, 'days'),
-        first_day,
-        last_month.add(1, 'months').month()
-      )
-      scope.month = $filter('date')(new Date(last_month), 'MMM')
+      changeDisplay(date.date(1).add(-1, 'month'));
+
 
     # Logic to get the next year
     scope.nextYear = (date) ->
-      next_month = moment(date).date(0)
-      last_day = moment(next_month).add(1, 'year').add(3, 'months').date(0)
-      scope.year = last_day.year()
-      if(last_day.day() != 7)
-        last_day = last_day.add(7 - last_day.day(), 'days')
-      first_day = moment(next_month).add(1, 'years').add(1, 'months').startOf('isoweek').add(-1, 'day')
-      scope.currentDate = first_day
-      scope.weeks = []
-      scope.weeks = getWeeks(
-        last_day.diff(first_day, 'days'),
-        first_day,
-        next_month.add(2, 'months').month()
-      )
-      scope.month = $filter('date')(new Date(next_month), 'MMM')
+      changeDisplay(date.date(1).add(1, 'year'));
 
     # Logic to get the previous year
     scope.previousYear = (date) ->
-      last_month = moment(date).date(0)
-      last_day = moment(last_month).subtract(1, 'years').add(3, 'months').date(0)
-      scope.year = last_day.year()
-      if(last_day.day() != 7)
-        last_day = last_day.add(7 - last_day.day(), 'days')
-      first_day = moment(last_month).subtract(1, 'years').add(1, 'months').startOf('isoweek').add(-1, 'day')
-      scope.currentDate = first_day
-      scope.weeks = []
-      scope.weeks = getWeeks(
-        last_day.diff(first_day, 'days'),
-        first_day,
-        last_month.add(2, 'months').month()
-      )
-      scope.month = $filter('date')(new Date(last_month), 'MMM')
+      changeDisplay(date.date(1).add(-1, 'year'));
+
+    dateChanged = (to, dontSetModel) ->
+      scope.selectedDate = to.format('YYYY-MM-DD');
+      scope.innerModel = to.format(scope.dateFormat || 'YYYY-MM-DD');
+      if !dontSetModel
+        ngModel[0].$setViewValue(to.format(scope.dateFormat || 'YYYY-MM-DD'));
+      changeDisplay(to);
+
+
 
     # Logic to hide the view if a date is selected
     scope.selectDate = (day) ->
       if day.isEnabled
-        newDate = day.date.format(scope.dateFormat);
-        scope.selectedDate = day.fmt;
-        scope.innerModel = day.date.format(scope.dateFormat || 'YYYY-MM-DD');
-        ngModel[0].$setViewValue(newDate);
+        dateChanged(day.date)
 
       scope.isVisible = false;
       
@@ -237,6 +207,9 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
     scope.isVisible = false
     scope.showPicker = ->
       scope.isVisible = true
+      selectedDate = moment(scope.innerModel, scope.dateFormat || 'YYYY-MM-DD')
+      if scope.currentDate.format('YYYY-MM') != selectedDate.format('YYYY-MM')
+        changeDisplay(selectedDate.date(1))
       return
 
     scope.hidePicker = ->
@@ -244,40 +217,17 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
       return
 
     init = ->
-# First day of month
-      if scope.utcMode
-        firstSunday = moment.utc(moment.utc().date(1)).startOf('isoweek').add(-1, 'day')
-      else
-        firstSunday = moment(moment().date(1)).startOf('isoweek').add(-1, 'day')
-      if(firstSunday.date() == 1) then firstSunday.subtract(1, 'weeks')
-
-      # No. of days in month
-      days = moment(moment().date(today.month())).daysInMonth()
-
-      # Last day of month
-      endDate = moment().add(1, 'months').date(0);
-      scope.month = $filter('date')(new Date(endDate), 'MMM')
-
-      # Check if last date is sunday, else add days to get to Sunday
-      if(endDate.day() != 7)
-        endDate = endDate.add(7 - endDate.day(), 'days')
+      dateChanged(moment());
+      # listen for input change
       scope.innerChange = () ->
         date = moment(scope.innerModel, scope.dateFormat || 'YYYY-MM-DD');
         if !date.isValid()
           return
-        scope.selectedDate = date.format('YYYY-MM-DD');
-        ngModel[0].$setViewValue(scope.innerModel);
+        dateChanged(date)
 
+      # our model changed
       ngModel[0].$render = () ->
-        scope.selectedDate = moment(ngModel[0].$viewValue).format('YYYY-MM-DD');
-        scope.innerModel = moment(ngModel[0].$viewValue).format(scope.dateFormat || 'YYYY-MM-DD');
-      scope.currentDate = firstSunday
-      scope.weeks = getWeeks(
-# No. of days in a month from sunday to sunday
-        endDate.diff(firstSunday, 'days'),
-        firstSunday,
-        today.month()
-      )
+        dateChanged(moment(ngModel[0].$viewValue), true)
     init()
 
 
