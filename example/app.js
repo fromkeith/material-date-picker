@@ -6,7 +6,7 @@ var app = angular.module('exampleApp', [
 ]);
 
 app.controller('MainCtrl', function ($scope) {
-    $scope.date = null;
+    $scope.date = moment().toDate();
     $scope.arrows = {
         year: {
             left: 'images/white_arrow_left.svg',
@@ -25,5 +25,8 @@ app.controller('MainCtrl', function ($scope) {
         friday: 'Fri',
         saturday: 'Sat',
         sunday: 'Sun',
+    }
+    $scope.dateChanged = function () {
+        console.log('it changed!', $scope.date);
     }
 })

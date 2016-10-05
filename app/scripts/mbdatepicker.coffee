@@ -24,9 +24,9 @@ app.directive("outsideClick", ['$document', '$parse', ($document, $parse) ->
     return
 ])
 app.directive('mbDatepicker', ['$filter', ($filter)->
+  require: ['ngModel']
   scope: {
     elementId: '@',
-    date: '=',
     dateFormat: '@'
     minDate: '@'
     maxDate: '@'
@@ -43,7 +43,7 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
   template: '
             <div id="dateSelectors" class="date-selectors"  outside-click="hidePicker()">
                     <label ng-bind="label" class="mb-input-label" for="{{inputName}}"></label>
-                    <input name="{{ inputName }}" type="text" ng-disabled="{{ngDisabled}}" ng-class="{disabled: ngDisabled}" class="mb-input-field {{customInputClass}}"  ng-click="showPicker()"  class="form-control" id="{{inputName}}" ng-model="date" placeholder="{{ placeholder }}">
+                    <input name="{{ inputName }}" type="text" ng-disabled="{{ngDisabled}}" ng-class="{disabled: ngDisabled}" class="mb-input-field {{customInputClass}}"  ng-click="showPicker()"  class="form-control" id="{{inputName}}" placeholder="{{ placeholder }}" ng-model="innerModel" ng-change="innerChange()">
                     <div class="mb-datepicker" ng-show="isVisible">
                         <table>
                             <caption>
@@ -69,8 +69,9 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
                                 <td class="day-head">{{ ::calendarHeader.sunday }}</td>
                               </tr>
                               <tr class="days" ng-repeat="week in weeks">
-                                <td ng-click="selectDate(day)" class="noselect" ng-class="::day.class" ng-repeat="day in week">
-                                  <div style="display: block;" ng-class="{selected: selectedDate === day.selected}">
+                                <td ng-click="selectDate(day)" class="noselect day-item" ng-repeat="day in week" ng-class="{selected: selectedDate === day.fmt, weekend: day.isWeekend, today: day.isToday, day: day.isEnabled, disabled: !day.isEnabled}">
+                                  <div style="display: block;">
+                                    {{day.date === selectedDate}}
                                     {{ ::day.value }}
                                   </div>
                                 </td>
@@ -82,7 +83,7 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
 '
   restrict: 'E',
   transclude: true,
-  link: (scope, element, attrs) ->
+  link: (scope, element, attrs, ngModel) ->
 
 # Vars
     selectors = element[0].querySelector('.date-selectors');
@@ -129,32 +130,29 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
         start = moment(startDay)
         if scope.utcMode then start.utc()
         newDate = start.add(day, 'd')
-        day = {date: newDate, value: newDate.format('DD')};
+        day = {
+          date: newDate,
+          value: newDate.format('DD'),
+          fmt: newDate.format('YYYY-MM-DD')
+        };
         if(scope.minDate and moment(newDate, scope.dateFormat) <= moment(scope.minDate, scope.dateFormat))
           day.isToday = true;
           day.isEnabled = false;
-          day.class = 'disabled';
           monthDays.push(day);
         else if(scope.maxDate and moment(newDate, scope.dateFormat) >= moment(scope.maxDate, scope.dateFormat))
           day.isToday = true;
           day.isEnabled = false;
-          day.class = 'disabled';
         else if newDate.format(scope.dateFormat) == moment().format(scope.dateFormat)
           day.isToday = true;
           day.isEnabled = true;
-          day.class = 'day-item today';
         else if(newDate.month() == month)
           day.isToday = false;
           day.isEnabled = true;
-          day.class = 'day-item day';
-        else if(newDate.day() == 0 || newDate.day() == 6)
-          day.isToday = false;
-          day.isEnabled = true;
-          day.class = 'day-item weekend';
+          if(newDate.day() == 0 || newDate.day() == 6)
+            day.isWeekend = true;
         else
           day.isToday = false;
-          day.isEnabled = true;
-          day.class = 'day-item';
+          day.isEnabled = false;
         monthDays.push(day);
 
       chunk_size = 7;
@@ -240,11 +238,11 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
     # Logic to hide the view if a date is selected
     scope.selectDate = (day) ->
       if day.isEnabled
-        scope.date = day.date.format(scope.dateFormat)
-        
-        if day.selected == scope.date
-          scope.selectedDate = day.selected
-          
+        newDate = day.date.format(scope.dateFormat);
+        scope.selectedDate = day.fmt;
+        scope.innerModel = day.date.format(scope.dateFormat || 'YYYY-MM-DD');
+        ngModel[0].$setViewValue(newDate);
+
       scope.isVisible = false;
       
 
@@ -275,7 +273,16 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
       # Check if last date is sunday, else add days to get to Sunday
       if(endDate.day() != 7)
         endDate = endDate.add(7 - endDate.day(), 'days')
+      scope.innerChange = () ->
+        date = moment(scope.innerModel, scope.dateFormat || 'YYYY-MM-DD');
+        if !date.isValid()
+          return
+        scope.selectedDate = date.format('YYYY-MM-DD');
+        ngModel[0].$setViewValue(scope.innerModel);
 
+      ngModel[0].$render = () ->
+        scope.selectedDate = moment(ngModel[0].$viewValue).format('YYYY-MM-DD');
+        scope.innerModel = moment(ngModel[0].$viewValue).format(scope.dateFormat || 'YYYY-MM-DD');
       scope.currentDate = firstMonday
       scope.weeks = getWeeks(
 # No. of days in a month from sunday to sunday

@@ -38,7 +38,7 @@ caption {
   padding-top: 10px;
   padding-bottom: 10px;
   color: white;
-  font-family: \"Open Sans\", sans-serif;
+  font-family: "Open Sans", sans-serif;
   font-size: 1.2em;
   background-color: #15A5DB;
 }
@@ -46,64 +46,75 @@ caption {
   padding-top: 5px;
   padding-bottom: 5px;
   color: #626262;
-  font-family: \"Open Sans\", sans-serif;
+  font-family: "Open Sans", sans-serif;
   font-size: 1.2em;
   background-color: #E8E8E8;
 }
 .header-year {
   padding-top: 1px;
-  padding-bottom: 0!important;
+  padding-bottom: 0;
   text-align: center;
   width: 80%;
   display: inline-block;
 }
-.mb-datepicker table tbody tr td{
+.mb-datepicker table tbody tr td {
   text-align: center;
   padding: 10px;
   cursor: pointer;
   color: #626262;
 }
-.mb-datepicker table tbody tr.days .day-item:hover{
-  background-color: #15A5DB;
-  color: #f5f5f5!important;
-}
-.mb-datepicker table tbody tr td.day-head{
+
+.mb-datepicker .day-head{
   background-color: #f5f5f5;
   cursor: default;
   border-bottom: 1px solid #ECECEC;
   font-weight: 600;
 }
-.mb-datepicker table tbody tr td.day-head:hover{
+.mb-datepicker .day-head:hover{
   background-color: #f5f5f5;
   color: #626262;
 }
-.today {
-  background: #61C7EC!important;
-  color: white!important;
+.mb-datepicker .disabled {
+  background:#ECECEC;
+  color:#a3a3a3;
 }
-.other {
+.mb-datepicker .disabled:hover {
+  background:#ECECEC;
 }
-.weekend {
-  color:#a3a3a3!important;
-}
-.day {
-  color:#60C1E6!important
-}
-.disabled {
-  background:#ECECEC!important;
-  color:#a3a3a3!important;
-}
-.disabled:hover {
-  background:#ECECEC!important;
-}
-.noselect {
+.mb-datepicker .noselect {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   user-select: none;
 }
-.mb-input-field {
+.mb-datepicker .mb-input-field {
   border-radius: 0;
   border-bottom: 1px solid red;
+}
+.mb-datepicker .day-item.day {
+  color: #60C1E6
+}
+.mb-datepicker .day-item.weekend {
+  color: #a3a3a3;
+}
+.mb-datepicker .day-item.today {
+  background: #B3E5FC;
+  color: white;
+}
+.mb-datepicker .day-item:hover{
+  background-color: #15A5DB;
+  color: #f5f5f5;
+}
+.mb-datepicker .day-item.selected {
+  background: #61C7EC;
+  color: white;
+}
+.mb-datepicker .day-item.disabled {
+  background: #ECECEC;
+  color:#a3a3a3;
+}
+.mb-datepicker .day-item.disabled:hover {
+  background: #ECECEC;
+  pointer: default;
 }
