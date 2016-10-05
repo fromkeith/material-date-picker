@@ -162,7 +162,7 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
       scope.year = last_day.year()
       if(last_day.day() != 7)
         last_day = last_day.add(7 - last_day.day(), 'days')
-      first_day = moment(next_month).add(2, 'months').startOf('isoweek')
+      first_day = moment(next_month).add(2, 'months').startOf('isoweek').add(-1, 'day')
       scope.currentDate = first_day
       scope.weeks = []
       scope.weeks = getWeeks(
@@ -179,7 +179,7 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
       scope.year = last_day.year()
       if(last_day.day() != 7)
         last_day = last_day.add(7 - last_day.day(), 'days')
-      first_day = moment(last_month).startOf('isoweek')
+      first_day = moment(last_month).startOf('isoweek').add(-1, 'day')
       scope.currentDate = first_day
       scope.weeks = []
       scope.weeks = getWeeks(
@@ -196,7 +196,7 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
       scope.year = last_day.year()
       if(last_day.day() != 7)
         last_day = last_day.add(7 - last_day.day(), 'days')
-      first_day = moment(next_month).add(1, 'years').add(1, 'months').startOf('isoweek')
+      first_day = moment(next_month).add(1, 'years').add(1, 'months').startOf('isoweek').add(-1, 'day')
       scope.currentDate = first_day
       scope.weeks = []
       scope.weeks = getWeeks(
@@ -213,7 +213,7 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
       scope.year = last_day.year()
       if(last_day.day() != 7)
         last_day = last_day.add(7 - last_day.day(), 'days')
-      first_day = moment(last_month).subtract(1, 'years').add(1, 'months').startOf('isoweek')
+      first_day = moment(last_month).subtract(1, 'years').add(1, 'months').startOf('isoweek').add(-1, 'day')
       scope.currentDate = first_day
       scope.weeks = []
       scope.weeks = getWeeks(
