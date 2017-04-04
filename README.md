@@ -11,6 +11,8 @@
 * Replaces svg arrows with material-icon
 * Opens the display at the selected date, not the last viewed
 * Not tested with any date format besides 'YYYY-MM-DD'
+* Added in 'tz' to account for displaying in a different timezone than you actually in.
+* Dependency on moment and moment-timezone.
 
 
 This small component is still in currently in BETA. It's a simple date picker based on the angular-material port of polymer by the people behind ionic.

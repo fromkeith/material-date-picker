@@ -56,13 +56,15 @@
           utcMode: '=',
           ngDisabled: '=',
           label: '@',
-          customInputClass: '@'
+          customInputClass: '@',
+          tz: '='
         },
         template: '<div id="dateSelectors" class="date-selectors"  outside-click="hidePicker()"> <label ng-bind="label" class="mb-input-label" for="{{inputName}}"></label> <input name="{{ inputName }}" type="text" ng-disabled="{{ngDisabled}}" ng-class="{disabled: ngDisabled}" class="mb-input-field {{customInputClass}}"  ng-click="showPicker()"  class="form-control" id="{{inputName}}" placeholder="{{ placeholder }}" ng-model="innerModel" ng-change="innerChange()"> <div class="mb-datepicker" ng-show="isVisible"> <table> <caption> <div class="header-year-wrapper"> <span style="display: inline-block; float: left; padding-left:20px; cursor: pointer" class="noselect" ng-click="previousYear(currentDate)"><i class="material-icons">chevron_left</i></span> <span class="header-year noselect" ng-class="noselect">{{ year }}</span> <span style="display: inline-block; float: right; padding-right:20px; cursor: pointer" class="noselect" ng-click="nextYear(currentDate)"><i class="material-icons">chevron_right</i></span> </div> <div class="header-nav-wrapper"> <span class="header-item noselect" style="float: left; cursor:pointer" ng-click="previousMonth(currentDate)"><i class="material-icons">chevron_left</i></span> <span class="header-month noselect">{{ month }}</span> <span class="header-item header-right noselect" style="float: right; cursor:pointer" ng-click="nextMonth(currentDate)"> <i class="material-icons">chevron_right</i></span> </div> </caption> <tbody> <tr> <td class="day-head">{{ ::calendarHeader.sunday }}</td> <td class="day-head">{{ ::calendarHeader.monday }}</td> <td class="day-head">{{ ::calendarHeader.tuesday }}</td> <td class="day-head">{{ ::calendarHeader.wednesday }}</td> <td class="day-head">{{ ::calendarHeader.thursday }}</td> <td class="day-head">{{ ::calendarHeader.friday }}</td> <td class="day-head">{{ ::calendarHeader.saturday }}</td> </tr> <tr class="days" ng-repeat="week in weeks"> <td ng-click="selectDate(day)" class="noselect day-item" ng-repeat="day in week" ng-class="{selected: selectedDate === day.fmt, weekend: day.isWeekend, today: day.isToday, day: day.isEnabled, disabled: !day.isEnabled}"> <div style="display: block;"> {{ ::day.value }} </div> </td> </tr> </tbody> </table> </div> </div>',
         restrict: 'E',
         transclude: true,
         link: function(scope, element, attrs, ngModel) {
-          var changeDisplay, dateChanged, getWeeks, init, selectors, today;
+          var changeDisplay, dateChanged, defaultTimezone, getTimezone, getWeeks, init, selectors, today;
+          defaultTimezone = moment.tz.guess();
           selectors = element[0].querySelector('.date-selectors');
           today = moment();
           if (scope.utcMode) {
@@ -184,6 +186,12 @@
             }
             return changeDisplay(to);
           };
+          getTimezone = function() {
+            if (scope.tz) {
+              return scope.tz;
+            }
+            return defaultTimezone;
+          };
           scope.selectDate = function(day) {
             dateChanged(day.date);
             return scope.isVisible = false;
@@ -192,8 +200,8 @@
           scope.showPicker = function() {
             var selectedDate;
             scope.isVisible = true;
-            selectedDate = moment(scope.innerModel, scope.dateFormat || 'YYYY-MM-DD');
-            if (scope.currentDate.format('YYYY-MM') !== selectedDate.format('YYYY-MM')) {
+            selectedDate = moment.tz(scope.innerModel, scope.dateFormat || 'YYYY-MM-DD', getTimezone());
+            if (scope.currentDate.tz(getTimezone()).format('YYYY-MM') !== selectedDate.format('YYYY-MM')) {
               changeDisplay(selectedDate.date(1));
             }
           };
@@ -201,17 +209,22 @@
             scope.isVisible = false;
           };
           init = function() {
-            dateChanged(moment(), true);
+            dateChanged(moment().tz(getTimezone()), true);
             scope.innerChange = function() {
               var date;
-              date = moment(scope.innerModel, scope.dateFormat || 'YYYY-MM-DD');
+              date = moment.tz(scope.innerModel, scope.dateFormat || 'YYYY-MM-DD', getTimezone());
               if (!date.isValid()) {
                 return;
               }
               return dateChanged(date);
             };
+            scope.$watch((function() {
+              return scope.tz;
+            }), (function() {
+              return ngModel[0].$render();
+            }));
             return ngModel[0].$render = function() {
-              return dateChanged(moment(ngModel[0].$viewValue), true);
+              return dateChanged(moment(ngModel[0].$viewValue).tz(getTimezone()), true);
             };
           };
           return init();

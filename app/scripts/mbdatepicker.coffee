@@ -39,7 +39,8 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
     utcMode: '=' # UTC mode can be used for fixed dates that should never be converted to local timezones (e.g., birth dates),
     ngDisabled: '=',
     label: '@',
-    customInputClass: '@'
+    customInputClass: '@',
+    tz: '=',
   }
   template: '
             <div id="dateSelectors" class="date-selectors"  outside-click="hidePicker()">
@@ -84,7 +85,7 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
   restrict: 'E',
   transclude: true,
   link: (scope, element, attrs, ngModel) ->
-
+    defaultTimezone = moment.tz.guess();
 # Vars
     selectors = element[0].querySelector('.date-selectors');
     today = moment()
@@ -195,7 +196,10 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
         ngModel[0].$setViewValue(to.format(scope.dateFormat || 'YYYY-MM-DD'));
       changeDisplay(to);
 
-
+    getTimezone = ->
+      if scope.tz
+        return scope.tz
+      return defaultTimezone
 
     # Logic to hide the view if a date is selected
     scope.selectDate = (day) ->
@@ -205,8 +209,8 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
     scope.isVisible = false
     scope.showPicker = ->
       scope.isVisible = true
-      selectedDate = moment(scope.innerModel, scope.dateFormat || 'YYYY-MM-DD')
-      if scope.currentDate.format('YYYY-MM') != selectedDate.format('YYYY-MM')
+      selectedDate = moment.tz(scope.innerModel, scope.dateFormat || 'YYYY-MM-DD', getTimezone())
+      if scope.currentDate.tz(getTimezone()).format('YYYY-MM') != selectedDate.format('YYYY-MM')
         changeDisplay(selectedDate.date(1))
       return
 
@@ -215,17 +219,17 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
       return
 
     init = ->
-      dateChanged(moment(), true);
+      dateChanged(moment().tz(getTimezone()), true);
       # listen for input change
       scope.innerChange = () ->
-        date = moment(scope.innerModel, scope.dateFormat || 'YYYY-MM-DD');
+        date = moment.tz(scope.innerModel, scope.dateFormat || 'YYYY-MM-DD', getTimezone());
         if !date.isValid()
           return
         dateChanged(date)
-
+      scope.$watch (() -> return scope.tz), (() -> ngModel[0].$render())
       # our model changed
       ngModel[0].$render = () ->
-        dateChanged(moment(ngModel[0].$viewValue), true)
+        dateChanged(moment(ngModel[0].$viewValue).tz(getTimezone()), true)
     init()
 
 

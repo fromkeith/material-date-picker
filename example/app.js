@@ -5,7 +5,7 @@ var app = angular.module('exampleApp', [
     'materialDatePicker'
 ]);
 
-app.controller('MainCtrl', function ($scope) {
+app.controller('MainCtrl', function ($scope, $timeout) {
     $scope.date = moment().toDate();
     $scope.header = {
         monday: 'Mon',
@@ -15,8 +15,12 @@ app.controller('MainCtrl', function ($scope) {
         friday: 'Fri',
         saturday: 'Sat',
         sunday: 'Sun',
-    }
+    };
+    $timeout(function () {
+        $scope.tz = 'Europe/London';
+    }, 1000);
+
     $scope.dateChanged = function () {
         console.log('it changed!', $scope.date);
-    }
-})
+    };
+});
