@@ -18,15 +18,17 @@
   };
 
   app.directive("outsideClick", [
-    '$document', '$parse', function($document, $parse) {
+    '$document', '$parse', '$timeout', function($document, $parse, $timeout) {
       return {
         link: function($scope, $element, $attributes) {
           var onDocumentClick, scopeExpression;
           scopeExpression = $attributes.outsideClick;
           onDocumentClick = function(event) {
-            if (!contains($element[0], event.target)) {
-              $scope.$apply(scopeExpression);
-            }
+            $timeout(function() {
+              if (!contains($element[0], event.target)) {
+                return $scope.$eval(scopeExpression);
+              }
+            });
           };
           $document.on("click", onDocumentClick);
           $element.on("$destroy", function() {
@@ -183,9 +185,7 @@
             return changeDisplay(to);
           };
           scope.selectDate = function(day) {
-            if (day.isEnabled) {
-              dateChanged(day.date);
-            }
+            dateChanged(day.date);
             return scope.isVisible = false;
           };
           scope.isVisible = false;

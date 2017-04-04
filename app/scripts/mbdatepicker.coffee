@@ -11,11 +11,12 @@ contains = (container, contained) ->
     node = node.parentNode
   node != null
 
-app.directive("outsideClick", ['$document', '$parse', ($document, $parse) ->
+app.directive("outsideClick", ['$document', '$parse', '$timeout', ($document, $parse, $timeout) ->
   link: ($scope, $element, $attributes) ->
     scopeExpression = $attributes.outsideClick
     onDocumentClick = (event) ->
-      $scope.$apply scopeExpression unless contains($element[0], event.target)
+      $timeout ->
+        $scope.$eval scopeExpression unless contains($element[0], event.target)
       return
     $document.on "click", onDocumentClick
     $element.on "$destroy", ->
@@ -198,11 +199,8 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
 
     # Logic to hide the view if a date is selected
     scope.selectDate = (day) ->
-      if day.isEnabled
-        dateChanged(day.date)
-
+      dateChanged(day.date)
       scope.isVisible = false;
-      
 
     scope.isVisible = false
     scope.showPicker = ->
