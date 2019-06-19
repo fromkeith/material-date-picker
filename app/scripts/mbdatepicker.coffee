@@ -229,7 +229,7 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
       scope.$watch (() -> return scope.tz), (() -> ngModel[0].$render())
       # our model changed
       ngModel[0].$render = () ->
-        dateChanged(moment(ngModel[0].$viewValue).tz(getTimezone()), true)
+        dateChanged(moment.tz(ngModel[0].$viewValue, scope.dateFormat || 'YYYY-MM-DD', getTimezone()), true)
     init()
 
 

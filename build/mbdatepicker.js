@@ -224,7 +224,7 @@
               return ngModel[0].$render();
             }));
             return ngModel[0].$render = function() {
-              return dateChanged(moment(ngModel[0].$viewValue).tz(getTimezone()), true);
+              return dateChanged(moment.tz(ngModel[0].$viewValue, scope.dateFormat || 'YYYY-MM-DD', getTimezone()), true);
             };
           };
           return init();
