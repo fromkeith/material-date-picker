@@ -170,7 +170,7 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
         first_day,
         to.month()
       )
-      scope.month = $filter('date')(to.toDate(), 'MMM')
+      scope.month = to.format('MMM')
 
     # Logic to get the following month
     scope.nextMonth = (date) ->
