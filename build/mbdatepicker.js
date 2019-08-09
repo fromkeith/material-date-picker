@@ -164,7 +164,7 @@
             scope.currentDate = to;
             scope.weeks = [];
             scope.weeks = getWeeks(last_day.diff(first_day, 'days'), first_day, to.month());
-            return scope.month = $filter('date')(to.toDate(), 'MMM');
+            return scope.month = to.format('MMM');
           };
           scope.nextMonth = function(date) {
             return changeDisplay(date.date(1).add(1, 'month'));
