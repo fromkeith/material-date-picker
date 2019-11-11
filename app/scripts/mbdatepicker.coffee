@@ -88,7 +88,7 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
     defaultTimezone = moment.tz.guess();
 # Vars
     selectors = element[0].querySelector('.date-selectors');
-    today = moment()
+    today = moment().tz(getTimezone())
     if scope.utcMode then today.utc()
     scope.month = '';
     scope.year = today.year();

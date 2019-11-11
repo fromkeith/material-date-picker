@@ -66,7 +66,7 @@
           var changeDisplay, dateChanged, defaultTimezone, getTimezone, getWeeks, init, selectors, today;
           defaultTimezone = moment.tz.guess();
           selectors = element[0].querySelector('.date-selectors');
-          today = moment();
+          today = moment().tz(getTimezone());
           if (scope.utcMode) {
             today.utc();
           }
