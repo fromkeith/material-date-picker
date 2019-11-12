@@ -66,7 +66,7 @@
           var changeDisplay, dateChanged, defaultTimezone, getTimezone, getWeeks, init, selectors, today;
           defaultTimezone = moment.tz.guess();
           selectors = element[0].querySelector('.date-selectors');
-          today = moment().tz(getTimezone());
+          today = moment();
           if (scope.utcMode) {
             today.utc();
           }
@@ -122,7 +122,7 @@
               } else if (scope.maxDate && moment(newDate, scope.dateFormat) >= moment(scope.maxDate, scope.dateFormat)) {
                 day.isToday = true;
                 day.isEnabled = false;
-              } else if (newDate.format(scope.dateFormat) === moment().format(scope.dateFormat)) {
+              } else if (newDate.format(scope.dateFormat) === moment().tz(getTimezone()).format(scope.dateFormat)) {
                 day.isToday = true;
                 day.isEnabled = true;
               } else if (newDate.month() === month) {
