@@ -132,7 +132,7 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
         else if(scope.maxDate and moment(newDate, scope.dateFormat) >= moment(scope.maxDate, scope.dateFormat))
           day.isToday = true;
           day.isEnabled = false;
-        else if newDate.format(scope.dateFormat) == moment().format(scope.dateFormat)
+        else if newDate.format(scope.dateFormat) == moment().tz(getTimezone()).format(scope.dateFormat)
           day.isToday = true;
           day.isEnabled = true;
         else if(newDate.month() == month)
