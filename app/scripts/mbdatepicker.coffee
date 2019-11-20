@@ -70,8 +70,8 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
                                 <td class="day-head">{{ ::calendarHeader.friday }}</td>
                                 <td class="day-head">{{ ::calendarHeader.saturday }}</td>
                               </tr>
-                              <tr class="days" ng-repeat="week in weeks">
-                                <td ng-click="selectDate(day)" class="noselect day-item" ng-repeat="day in week" ng-class="{selected: selectedDate === day.fmt, weekend: day.isWeekend, today: day.isToday, day: day.isEnabled, disabled: !day.isEnabled}">
+                              <tr class="days" ng-repeat="week in weeks track by $index">
+                                <td ng-click="selectDate(day)" class="noselect day-item" ng-repeat="day in week track by $index" ng-class="{selected: selectedDate === day.fmt, weekend: day.isWeekend, today: day.isToday, day: day.isEnabled, disabled: !day.isEnabled}">
                                   <div style="display: block;">
                                     {{ ::day.value }}
                                   </div>
