@@ -70,8 +70,8 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
                                 <td class="day-head">{{ ::calendarHeader.friday }}</td>
                                 <td class="day-head">{{ ::calendarHeader.saturday }}</td>
                               </tr>
-                              <tr class="days" ng-repeat="week in weeks">
-                                <td ng-click="selectDate(day)" class="noselect day-item" ng-repeat="day in week" ng-class="{selected: selectedDate === day.fmt, weekend: day.isWeekend, today: day.isToday, day: day.isEnabled, disabled: !day.isEnabled}">
+                              <tr class="days" ng-repeat="week in weeks track by week.id">
+                                <td ng-click="selectDate(day)" class="noselect day-item" ng-repeat="day in week.week track by day.date" ng-class="{selected: selectedDate === day.fmt, weekend: day.isWeekend, today: day.isToday, day: day.isEnabled, disabled: !day.isEnabled}">
                                   <div style="display: block;">
                                     {{ ::day.value }}
                                   </div>
@@ -149,7 +149,7 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
 
       # Map reduce by 7 days per week
       weeks = monthDays.map((e, i) ->
-        if i % chunk_size == 0 then monthDays.slice(i, i + chunk_size)
+        if i % chunk_size == 0 then {id:'id_'+i+'_'+month,week:monthDays.slice(i, i + chunk_size)}
         else null;
       ).filter((e) ->
         return e;
