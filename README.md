@@ -10,9 +10,9 @@
 * Allows the use of ng-change
 * Replaces svg arrows with material-icon
 * Opens the display at the selected date, not the last viewed
-* Not tested with any date format besides 'YYYY-MM-DD'
+* Not tested with any date format besides 'yyyy-MM-dd'
 * Added in 'tz' to account for displaying in a different timezone than you actually in.
-* Dependency on moment and moment-timezone.
+* Dependency [Luxon](https://moment.github.io/luxon/).
 
 
 This small component is still in currently in BETA. It's a simple date picker based on the angular-material port of polymer by the people behind ionic.
@@ -24,9 +24,9 @@ https://material.angularjs.org/
 ##Install
 This component is bower and npm registered 
 ```css
-bower install material-date-picker (installs moment as dependency)
+bower install material-date-picker (installs luxon as dependency)
 npm install material-date-picker
-npm install moment
+npm install luxon
 ```
 All the necessary files will be automatically included in your index.html if not add
 ```css
