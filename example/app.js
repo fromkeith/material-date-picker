@@ -6,18 +6,18 @@ var app = angular.module('exampleApp', [
 ]);
 
 app.controller('MainCtrl', function ($scope, $timeout) {
-    $scope.date = moment().toDate();
-    $scope.header = {
-        monday: 'Mon',
-        tuesday: 'Tue',
-        wednesday: 'Wed',
-        thursday: 'Thu',
-        friday: 'Fri',
-        saturday: 'Sat',
-        sunday: 'Sun',
-    };
+    $scope.date = luxon.DateTime.local().toJSDate();
+    // $scope.header = {
+    //     monday: 'Mon',
+    //     tuesday: 'Tue',
+    //     wednesday: 'Wed',
+    //     thursday: 'Thu',
+    //     friday: 'Fri',
+    //     saturday: 'Sat',
+    //     sunday: 'Sun',
+    // };
     $timeout(function () {
-        $scope.tz = 'Europe/London';
+        $scope.tz = 'Australia/Sydney';
     }, 1000);
 
     $scope.dateChanged = function () {

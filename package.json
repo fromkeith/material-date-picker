@@ -2,7 +2,7 @@
   "name": "material-date-picker",
   "version": "1.2.3",
   "dependencies": {
-    "moment": "~2.9.0"
+    "luxon": "^1.25.0"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
@@ -10,7 +10,9 @@
     "grunt-contrib-copy": "^0.8.0"
   },
   "engines": {},
-  "scripts": {},
+  "scripts": {
+    "build": "grunt build"
+  },
   "description": "![Alt text](http://i.imgur.com/zAlNOIe.png)",
   "main": "build/mbdatepicker.js",
   "directories": {
