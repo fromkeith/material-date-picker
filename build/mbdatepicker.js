@@ -263,7 +263,9 @@
             }));
             return ngModel[0].$render = function() {
               var asDte;
-              if (typeof ngModel[0].$viewValue === 'object') {
+              if (ngModel[0].$viewValue === void 0) {
+                return;
+              } else if (typeof ngModel[0].$viewValue === 'object') {
                 asDte = luxon.DateTime.fromJSDate(ngModel[0].$viewValue, {
                   zone: getTimezone()
                 });
