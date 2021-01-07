@@ -243,7 +243,9 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
       scope.$watch (() -> return scope.tz), (() -> ngModel[0].$render())
       # our model changed
       ngModel[0].$render = () ->
-        if typeof ngModel[0].$viewValue == 'object'
+        if ngModel[0].$viewValue == undefined
+            return # do nothing. our user could be still loading
+        else if typeof ngModel[0].$viewValue == 'object'
             asDte = luxon.DateTime.fromJSDate(ngModel[0].$viewValue, {zone: getTimezone()})
         else
             asDte = luxon.DateTime.fromFormat(ngModel[0].$viewValue, scope.dateFormat || 'yyyy-MM-dd', {zone:  getTimezone()})
