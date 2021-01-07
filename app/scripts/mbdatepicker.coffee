@@ -124,7 +124,7 @@ app.directive('mbDatepicker', ['$filter', ($filter)->
       if scope.maxDate
         if typeof scope.maxDate == 'string' then scope.maxDate = luxon.DateTime.fromFormat(scope.maxDate, scope.dateFormat)
         maxDayCompare = scope.maxDate.toFormat('yyyy-MM-dd')
-      nowFormat = luxon.DateTime.local({zone: getTimezone()}).toFormat('yyyy-MM-dd')
+      nowFormat = luxon.DateTime.local().setZone(getTimezone()).toFormat('yyyy-MM-dd')
       start = startDay.startOf('day')
       for day in [0..monthLength]
         if scope.utcMode then start = start.utc()

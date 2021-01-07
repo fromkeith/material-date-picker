@@ -117,9 +117,7 @@
               }
               maxDayCompare = scope.maxDate.toFormat('yyyy-MM-dd');
             }
-            nowFormat = luxon.DateTime.local({
-              zone: getTimezone()
-            }).toFormat('yyyy-MM-dd');
+            nowFormat = luxon.DateTime.local().setZone(getTimezone()).toFormat('yyyy-MM-dd');
             start = startDay.startOf('day');
             for (day = j = 0, ref = monthLength; 0 <= ref ? j <= ref : j >= ref; day = 0 <= ref ? ++j : --j) {
               if (scope.utcMode) {
